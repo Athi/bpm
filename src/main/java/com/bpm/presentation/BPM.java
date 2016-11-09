@@ -1,6 +1,6 @@
 package com.bpm.presentation;
 
-import com.bpm.presentation.login.LoginForm;
+import com.bpm.presentation.login.BPMLogin;
 import com.bpm.security.Security;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
@@ -9,11 +9,11 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
@@ -25,6 +25,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import static com.bpm.presentation.BPM.APPLICATION_TITLE;
 
@@ -50,10 +51,15 @@ public class BPM extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+        setSizeFull();
         if (Security.isLoggedIn()) {
             showMain();
         } else {
-            setContent(new LoginForm(this::login));
+            BPMLogin login = new BPMLogin(this::login);
+            MVerticalLayout content = new MVerticalLayout(login)
+                    .withFullWidth().withFullHeight()
+                    .alignAll(Alignment.MIDDLE_CENTER);
+            setContent(content);
         }
     }
 
